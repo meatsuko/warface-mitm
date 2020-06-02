@@ -94,12 +94,12 @@ namespace mitm_warface
                     //}
 
                     packet.Write(clientStream);
-                    
+
                     // wait packet tls init
                     if (content.Equals("<stream:features><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'><required/></starttls><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>WARFACE</mechanism></mechanisms></stream:features>"))
                     {
                         // what is it ? 
-
+                        // почитал документацию, похоже что это пакет в base64... Надо проверить -лень!
                         // replace with Packet ?
                         // dump HEX show - magic length and nn
                         // read to end ? 
@@ -127,7 +127,7 @@ namespace mitm_warface
                 //new Task(() => __Tunnel(clientStream, serverStream, "__client")).Start();
                 //new Task(() => __Tunnel(serverStream, clientStream, "__server")).Start();
                 //while (true) { }
-                
+
                 __clientStream = new SslStream(clientStream, true);
                 //__clientStream.AuthenticateAsServer(new X509Certificate2("__cert/warface.cer", "300400"));
                 __clientStream.AuthenticateAsServer(new X509Certificate("__cert/warface.cer", "300400"), false, System.Security.Authentication.SslProtocols.Tls, false);
@@ -140,7 +140,6 @@ namespace mitm_warface
                 // преположительно верификация проходит успешно, но после чего КЛИЕНТ сразу ловит дисконнект
                 // крашлог клиента говрит - XMPP connection lost (state 2, reason 13)
                 
-
 
                 __serverStream = new SslStream(serverStream, false, __sslValidationCallback, null);
                 __serverStream.AuthenticateAsClient("s1.warface.ru", null, System.Security.Authentication.SslProtocols.Tls, false);
